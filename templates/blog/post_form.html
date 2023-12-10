@@ -1,0 +1,43 @@
+<!-- templates/blog/post_form.html -->
+{% extends 'base.html' %}
+
+{% block title %}Crear Nuevo Post - Mi Proyecto{% endblock %}
+
+{% block content %}
+  <div class="container mt-5">
+    <div class="card w-75 mx-auto">
+      <div class="card-body">
+        <h2 class="card-title">Crear Nuevo Post</h2>
+        <form method="post" class="needs-validation" novalidate>
+          {% csrf_token %}
+
+          <!-- Renderizar manualmente los campos Title y Content -->
+          <div class="mb-3">
+            <label for="{{ form.title.id_for_label }}" class="form-label">Title:</label>
+            {{ form.title }}
+          </div>
+
+          <div class="mb-3">
+            <label for="{{ form.content.id_for_label }}" class="form-label">Content:</label>
+            {{ form.content }}
+          </div>
+
+          <!-- Campo de selección múltiple para los tags -->
+          <div class="mb-3">
+            <label for="id_tags" class="form-label">Tags:</label>
+            <select name="tags" id="id_tags" class="form-select" multiple>
+              {% for tag in form.fields.tags.queryset %}
+                <option value="{{ tag.id }}">{{ tag.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Crear Post</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Incluye Bootstrap JS al final del cuerpo del documento si lo necesitas -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+{% endblock %}

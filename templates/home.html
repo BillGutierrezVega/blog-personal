@@ -1,0 +1,19 @@
+<!-- templates/home.html -->
+{% extends 'base.html' %}
+
+{% block title %}Inicio - Mi Proyecto{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h2>Bienvenido a Mi Proyecto</h2><br>
+
+        {% if request.user.is_authenticated %}
+            <h3>{{ user.username }}, ten un buen día</h3>
+            <p>Explora las últimas publicaciones en nuestro <a href="{% url 'post_list' %}">Blog</a>.</p>
+        {% else %}
+            <p>Este es el contenido de la página de inicio.</p>
+            <p>¿Listo para comenzar? Regístrate ahora y comienza a compartir tus ideas en nuestro <a href="{% url 'post_list' %}">Blog</a>.</p>
+            <a href="{% url 'register' %}" class="btn btn-primary">Registrarse</a>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -1,0 +1,48 @@
+<!-- templates/registration/register.html -->
+{% extends 'base.html' %}
+
+{% block title %}Registro - Mi Proyecto{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6 mx-auto">
+                <h2 class="text-center">Registro</h2>
+                <form method="post" class="needs-validation" novalidate>
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label for="{{ form.username.id_for_label }}" class="form-label">Nombre de usuario:</label>
+                        {{ form.username }}
+                        <div class="invalid-feedback">
+                            {{ form.username.errors }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.password1.id_for_label }}" class="form-label">Contraseña:</label>
+                        {{ form.password1 }}
+                        <div class="invalid-feedback">
+                            {{ form.password1.errors }}
+                        </div>
+                        <div>
+                            <h6>* Debe tener mínimo 8 caracteres</h6>
+                            <h6>* Debe contener al menos un número</h6>
+                            <h6>* Debe contener al menos un caracter especial</h6>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.password2.id_for_label }}" class="form-label">Contraseña (confirmación):</label>
+                        {{ form.password2 }}
+                        <div class="invalid-feedback">
+                            {{ form.password2.errors }}
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Registrarse</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
