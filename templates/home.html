@@ -5,15 +5,96 @@
 
 {% block content %}
     <div class="container mt-5">
-        <h2>Bienvenido a Mi Proyecto</h2><br>
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <h2 id="welcome-text">Bienvenido a Mi Proyecto</h2><br>
 
-        {% if request.user.is_authenticated %}
-            <h3>{{ user.username }}, ten un buen día</h3>
-            <p>Explora las últimas publicaciones en nuestro <a href="{% url 'post_list' %}">Blog</a>.</p>
-        {% else %}
-            <p>Este es el contenido de la página de inicio.</p>
-            <p>¿Listo para comenzar? Regístrate ahora y comienza a compartir tus ideas en nuestro <a href="{% url 'post_list' %}">Blog</a>.</p>
-            <a href="{% url 'register' %}" class="btn btn-primary">Registrarse</a>
-        {% endif %}
+                {% if request.user.is_authenticated %}
+                    <h3 id="greeting-text"></h3>
+                    <p>Explora las últimas publicaciones en nuestro <a href="{% url 'post_list' %}">Blog</a>.</p>
+                {% else %}
+                    <p>Este es el contenido de la página de inicio.</p>
+                    <p>¿Listo para comenzar? Regístrate ahora y comienza a compartir tus ideas en nuestro <a href="{% url 'post_list' %}">Blog</a>.</p>
+                    <a href="{% url 'register' %}" class="btn btn-primary">Registrarse</a>
+                {% endif %}
+            </div>
+        </div>
     </div>
+
+    <script>
+        const welcomeText = document.getElementById('welcome-text');
+        const greetingText = document.getElementById('greeting-text');
+        const phrases = [
+        "{{ user.username|capfirst }}, ten un buen día",
+        "{{ user.username|capfirst }}, eres el mejor",
+        "{{ user.username|capfirst }}, siempre es un placer verte",
+        "{{ user.username|capfirst }}, hoy será un día increíble",
+        "La vida es hermosa, {{ user.username|capfirst }}",
+        "Nunca dejes de sonreír, {{ user.username|capfirst }}",
+        "Cada día es una nueva oportunidad, {{ user.username|capfirst }}",
+        "La perseverancia es la clave del éxito, {{ user.username|capfirst }}",
+        "Haz lo que amas, {{ user.username|capfirst }}, y nunca trabajarás un día en tu vida",
+        "La felicidad es una elección, {{ user.username|capfirst }}",
+        "El éxito es la suma de pequeños esfuerzos repetidos día tras día, {{ user.username|capfirst }}",
+        "La paciencia es amarga, pero su fruto es dulce, {{ user.username|capfirst }}",
+        "Nada es imposible, la palabra misma dice 'soy posible', {{ user.username|capfirst }}",
+        "La creatividad es la inteligencia divirtiéndose, {{ user.username|capfirst }}",
+        "Si puedes soñarlo, puedes lograrlo, {{ user.username|capfirst }}",
+        "{{ user.username|capfirst }}, disfruta cada momento de la vida",
+        "{{ user.username|capfirst }}, tus sueños están a un paso de distancia",
+        "El optimismo es la fe que conduce al logro, {{ user.username|capfirst }}",
+        "La actitud lo es todo, mantén una actitud positiva, {{ user.username|capfirst }}",
+        "Sé la razón por la que alguien sonríe hoy, {{ user.username|capfirst }}",
+        "{{ user.username|capfirst }}, la vida es corta, sonríe mientras aún tienes dientes",
+        "Haz que cada día cuente, {{ user.username|capfirst }}",
+        "Nunca es tarde para ser lo que podrías haber sido, {{ user.username|capfirst }}",
+        "{{ user.username|capfirst }}, la felicidad es una dirección, no un lugar",
+        "La disciplina es el puente entre metas y logros, {{ user.username|capfirst }}",
+        "Vive el presente, {{ user.username|capfirst }}, sueña el futuro, aprende del pasado",
+        "{{ user.username|capfirst }}, el éxito no es la clave de la felicidad, la felicidad es la clave del éxito",
+        "No dejes para mañana lo que puedes hacer hoy, {{ user.username|capfirst }}",
+        "Cree en ti mismo y todo será posible, {{ user.username|capfirst }}",
+        "El único modo de hacer un gran trabajo es amar lo que haces, {{ user.username|capfirst }}",
+        "{{ user.username|capfirst }}, cada día es una nueva oportunidad para cambiar tu vida",
+        "{{ user.username|capfirst }}, hoy es el día perfecto para ser feliz",
+        "La vida es corta, {{ user.username|capfirst }}, sonríe mientras aún puedes",
+        "{{ user.username|capfirst }}, eres más fuerte de lo que piensas",
+        "Nunca subestimes el poder de tus sueños, {{ user.username|capfirst }}",
+        "{{ user.username|capfirst }}, la mejor manera de predecir el futuro es crearlo",
+        "El éxito es la suma de pequeños esfuerzos diarios, {{ user.username|capfirst }}",
+        "{{ user.username|capfirst }}, siempre hay una razón para ser agradecido",
+        "Cada día es una nueva oportunidad para cambiar tu vida, {{ user.username|capfirst }}",
+        "{{ user.username|capfirst }}, tu actitud determina tu dirección",
+        "No cuentes los días, haz que los días cuenten, {{ user.username|capfirst }}",
+        "{{ user.username|capfirst }}, el único modo de hacer un gran trabajo es amar lo que haces",
+        "Sé la mejor versión de ti mismo, {{ user.username|capfirst }}",
+        "{{ user.username|capfirst }}, nunca es tarde para ser lo que podrías haber sido",
+        "La verdadera medida de la riqueza es cuánto estarías dispuesto a perder, {{ user.username|capfirst }}",
+        "{{ user.username|capfirst }}, cada logro comienza con la decisión de intentarlo",
+        "La paciencia es la llave del éxito, {{ user.username|capfirst }}",
+        "{{ user.username|capfirst }}, la vida no es esperar a que pase la tormenta, sino aprender a bailar bajo la lluvia",
+        "Cree en ti mismo y todo será posible, {{ user.username|capfirst }}",
+        "{{ user.username|capfirst }}, la felicidad no es algo que pospones para el futuro, es algo que diseñas para el presente",
+        "Las oportunidades no ocurren. Las creas, {{ user.username|capfirst }}",
+        "{{ user.username|capfirst }}, la vida es un 10% lo que nos sucede y un 90% cómo reaccionamos",
+        "No busques oportunidades externas, {{ user.username|capfirst }}, créalas",
+        "{{ user.username|capfirst }}, el éxito no es para los que piensan que pueden, sino para los que lo hacen",
+        "Haz hoy lo que otros no quieren, haz mañana lo que otros no pueden, {{ user.username|capfirst }}",
+        "{{ user.username|capfirst }}, el único lugar donde el éxito viene antes que el trabajo es en el diccionario",
+        "No te preocupes por los fracasos, preocúpate por las posibilidades que pierdes al no intentarlo, {{ user.username|capfirst }}",
+        "La vida no es acerca de encontrarte a ti mismo, sino de crearte a ti mismo, {{ user.username|capfirst }}",
+        "{{ user.username|capfirst }}, cada día es una página en tu historia de éxito",
+        "La vida es un viaje que debe ser disfrutado, no un problema que debe ser resuelto, {{ user.username|capfirst }}",
+        "{{ user.username|capfirst }}, nunca subestimes el poder de tus acciones para hacer el bien",
+        ];
+
+        let index = 0;
+
+        function updateText() {
+            greetingText.textContent = phrases[index];
+            index = (index + 1) % phrases.length;
+        }
+
+        setInterval(updateText, 2500); // Cambia la frase cada 2 segundos
+    </script>
 {% endblock %}

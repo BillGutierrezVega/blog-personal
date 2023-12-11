@@ -1,24 +1,52 @@
 # blog/views.py
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Post, Tag
-from .forms import PostForm, TagForm
+from .models import Post, Comentario
+from .forms import PostForm, TagForm, ComentarioForm
 
 
 def post_list(request):
     # Redirige a la página de creación de post si el parámetro 'create' está presente en la URL
     if 'create' in request.GET:
         return redirect('create_post')
-    posts = Post.objects.all()
+    posts = Post.objects.all().order_by('-created_at')
     return render(request, 'blog/post_list.html', {'posts': posts})
 
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
-    # Incrementa el contador de visitas cada vez que se visualiza el post
-    post.visit_count += 1
-    post.save()
-    return render(request, 'blog/post_detail.html', {'post': post})
+    comentarios = Comentario.objects.filter(post=post)
+
+    if request.method == 'POST':
+        post.visit_count -= 1
+        # Verificar si se está dando like
+        if 'like' in request.POST:
+            if request.user in post.likes.all():
+                post.likes.remove(request.user)
+            else:
+                post.likes.add(request.user)
+
+            post.save()
+            return redirect('post_detail', pk=pk)
+
+        # Si no es un like, asumimos que es un comentario
+        form = ComentarioForm(request.POST)
+
+        if form.is_valid():
+            comentario = form.save(commit=False)
+            comentario.author = request.user
+            comentario.post = post
+            comentario.save()
+
+            return redirect('post_detail', pk=pk)
+    else:
+        # Aumentar el contador de visitas solo en solicitudes GET
+        post.visit_count += 1
+        post.save()
+
+    form = ComentarioForm()
+
+    return render(request, 'blog/post_detail.html', {'post': post, 'comentarios': comentarios, 'form': form})
 
 
 def home(request):

@@ -1,14 +1,16 @@
-<!-- templates/blog/post_detail.html -->
 {% extends 'base.html' %}
+{% load static %}
+
+<!-- templates/blog/post_detail.html -->
 
 {% block title %}{{ post.title }} - Mi Proyecto{% endblock %}
 
 {% block content %}
-    <div class="container mt-5">
+    <div class="container mt-6">
         <div class="row">
             <div class="col-md-8 mx-auto">
                 <div class="card">
-                    <div class="card-body d-flex flex-column">
+                    <div class="card-body">
                         <h2 class="card-title">{{ post.title|capfirst }}</h2>
                         <p class="card-subtitle text-muted">Por {{ post.author }} el {{ post.created_at|date:"F d, Y" }}</p>
                         <p class="card-text">{{ post.content }}</p>
@@ -16,10 +18,56 @@
 
                         <!-- Mostrar el contador de visitas -->
                         <p class="card-text"><strong>Visitas:</strong> {{ post.visit_count }}</p>
+                        
 
-                        <div class="mt-auto">
-                            <a href="{% url 'post_list' %}" class="btn btn-outline-primary">Volver</a>
-                        </div>
+
+                        <!-- Formulario para dar like -->
+                        <p class="card-text"><strong>Likes:</strong> {{ post.likes.count }}</p>
+                        <form method="post" action="{% url 'post_detail' pk=post.pk %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary mt-2" name="like">
+                                {% if user in post.likes.all %}
+                                    Unlike
+                                {% else %}
+                                    Like
+                                {% endif %}
+                            </button>
+                        </form>
+
+
+                        <h3 class="mt-4">Comentarios:</h3>
+                        {% for comentario in comentarios %}
+                            
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <img src="{% static 'path/to/avatar.png' %}" class="mr-3 rounded-circle" alt="Avatar" style="max-width: 50px;">
+                                        </div>
+                                        <div class="col-md-10">
+                                            <div class="media-body">
+                                                <h6 class="mt-0">{{ comentario.author.username }}</h6>
+                                                <p>{{ comentario.comentario }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                        {% endfor %}
+
+
+
+
+                        <!-- Formulario para agregar nuevos comentarios -->
+                        <h3 class="mt-4">Deja un comentario:</h3>
+                        <form method="post" action="{% url 'post_detail' pk=post.pk %}">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <button type="submit" class="btn btn-primary mt-2">Comentar</button>
+                        </form>
+                    </div>
+
+                    <div class="card-footer d-flex justify-content-end">
+                        <a href="{% url 'post_list' %}" class="btn btn-outline-primary">Volver</a>
                     </div>
                 </div>
             </div>

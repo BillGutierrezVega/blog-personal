@@ -4,7 +4,7 @@
 {% block title %}Registro - Mi Proyecto{% endblock %}
 
 {% block content %}
-    <div class="container mt-5">
+    <div class="container">
         <div class="row">
             <div class="col-md-6 mx-auto">
                 <h2 class="text-center">Registro</h2>
@@ -16,6 +16,9 @@
                         {{ form.username }}
                         <div class="invalid-feedback">
                             {{ form.username.errors }}
+                        </div>
+                        <div>
+                            <h6>* El nombre de usuario no debe contener espacios en blanco</h6>
                         </div>
                     </div>
 
