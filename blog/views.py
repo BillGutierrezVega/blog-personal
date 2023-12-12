@@ -1,6 +1,9 @@
 # blog/views.py
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+
+from twilio.rest import Client
+
 from .models import Post, Comentario
 from .forms import PostForm, TagForm, ComentarioForm
 
@@ -17,19 +20,19 @@ def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
     comentarios = Comentario.objects.filter(post=post)
 
+    # Aumentar el contador de visitas solo en solicitudes GET
+    if request.method == 'GET':
+        post.visit_count += 1
+        post.save()
+    # Incluye el formulario en el contexto
+    form = ComentarioForm()
+
+    return render(request, 'blog/post_detail.html', {'post': post, 'comentarios': comentarios, 'form':form})
+
+def add_comentario(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    
     if request.method == 'POST':
-        post.visit_count -= 1
-        # Verificar si se está dando like
-        if 'like' in request.POST:
-            if request.user in post.likes.all():
-                post.likes.remove(request.user)
-            else:
-                post.likes.add(request.user)
-
-            post.save()
-            return redirect('post_detail', pk=pk)
-
-        # Si no es un like, asumimos que es un comentario
         form = ComentarioForm(request.POST)
 
         if form.is_valid():
@@ -38,15 +41,47 @@ def post_detail(request, pk):
             comentario.post = post
             comentario.save()
 
-            return redirect('post_detail', pk=pk)
-    else:
-        # Aumentar el contador de visitas solo en solicitudes GET
-        post.visit_count += 1
+    return redirect('post_detail', pk=pk)
+
+
+
+
+# def send_twilio_message(post_title, commenter_name, author_name, phone_number):
+#     # Configura tu cuenta de Twilio
+#     account_sid = 'TU_TWILIO_ACCOUNT_SID'
+#     auth_token = 'TU_TWILIO_AUTH_TOKEN'
+    # client = Client(account_sid, auth_token)
+
+    # Cuerpo del mensaje
+    # message_body = f"{post_title}\n\nNombre del post ({author_name})\n\n{comentario}\n\nEste post tiene un nuevo comentario de {commenter_name}"
+
+    # Cambia los números por los valores adecuados
+    # from_whatsapp_number = 'whatsapp:+14155238886'
+    # to_whatsapp_number = f'whatsapp:{phone_number}'
+
+    # Envía el mensaje
+    # message = client.messages.create(
+    #     body=message_body,
+    #     from_=from_whatsapp_number,
+    #     to=to_whatsapp_number
+    # )
+
+
+
+def toggle_like(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+
+    if request.method == 'POST' and 'like' in request.POST:
+        if request.user in post.likes.all():
+            post.likes.remove(request.user)
+            post.visit_count -= 1
+        else:
+            post.likes.add(request.user)
+            post.visit_count -= 1
+
         post.save()
 
-    form = ComentarioForm()
-
-    return render(request, 'blog/post_detail.html', {'post': post, 'comentarios': comentarios, 'form': form})
+    return redirect('post_detail', pk=pk)
 
 
 def home(request):
